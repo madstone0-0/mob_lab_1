@@ -1,5 +1,6 @@
 <?php
 
+// Helper functions
 function isAnyEmpty($array)
 {
     $array = trimArray($array);
@@ -73,6 +74,7 @@ function slice($array, $start = 1, $end = null)
     }
 }
 
+// Handle routes that do not require a body (GET, DELETE)
 function handleNoBody($uri, $func)
 {
     try {
@@ -115,6 +117,8 @@ function isOk($status)
     return $status >= 200 && $status < 300;
 }
 
+// Parse the URI and return an array of its components
+// removing any elements before and including index.php and any empty elements
 function parseURI($rootFile = 'index.php')
 {
     $uri = parse_url($_SERVER['PHP_SELF'], PHP_URL_PATH);
@@ -131,6 +135,8 @@ function parseURI($rootFile = 'index.php')
     return $uri;
 }
 
+// Handle routes that require a body (POST, PUT)
+// if the body is not valid JSON, return a 400 error
 function handleBody($func)
 {
     $data = json_decode(file_get_contents('php://input'), associative: true);
@@ -142,23 +148,32 @@ function handleBody($func)
     $func($data);
 }
 
+// Route handler function
+// This function will be called by the main router in index.php when 
+// the URI matches a route that requires a body (POST, PUT) or does 
+// not require a body (GET, DELETE)
 function routeHandler($verb, $uri, $routes)
 {
     try {
+        // Get the subroute from the URI (the second element of the URI array)
         $subroute = $uri[1];
 
+        // If the subroute is not defined in the routes array, return a 404
         if (! isset($routes[$verb][$subroute])) {
             sendError('Route not found', 404);
             exit();
         }
 
+        // Find the route function from the routes array using the HTTP verb and subroute
         $func = $routes[$verb][$subroute];
 
+        // If the route function is not defined, return a 404
         if (! $func) {
             sendError('Route not found', 404);
             exit();
         }
 
+        // Handle the route based on the HTTP verb
         match ($verb) {
             'GET', 'DELETE' => handleNoBody($uri, $func),
             'POST', 'PUT' => handleBody($func),

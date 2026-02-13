@@ -3,8 +3,10 @@
 require_once __DIR__ . "/../services/ContactService.php";
 require_once __DIR__ . "/../utils.php";
 
+// Contact service with business logic
 $ContactService = new ContactService;
 
+// Route map for contacts
 $contactRoutes = [
     "GET" => ["all" => all(...), "one" => one(...)],
     "POST" => ["add" => add(...)],
@@ -13,6 +15,7 @@ $contactRoutes = [
 ];
 
 
+// Get all contacts route
 function all()
 {
     global $ContactService;
@@ -25,6 +28,7 @@ function all()
     sendData($res["data"]);
 }
 
+// Get one contact route
 function one($data)
 {
     $id = $data["pid"];
@@ -39,6 +43,7 @@ function one($data)
     sendData($res["data"]);
 }
 
+// Add contact route
 function add($data)
 {
     $fullname = $data["pname"];
@@ -54,6 +59,7 @@ function add($data)
     sendData($res["data"]);
 }
 
+// Delete contact route
 function delete($data)
 {
     $id = $data["pid"];
@@ -68,6 +74,7 @@ function delete($data)
     sendData($res["data"]);
 }
 
+// Update contact route
 function update($data)
 {
     $id = $data["pid"];
@@ -84,7 +91,8 @@ function update($data)
     sendData($res["data"]);
 }
 
-
+// Contacts route handler
+// This function will be called by the main router in index.php when the URI matches "contacts"
 function contactsHandler($verb, $uri)
 {
     global $contactRoutes;

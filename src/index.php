@@ -7,6 +7,7 @@ require_once __DIR__ . '/./rules.php';
 // /*ini_set('display_errors', 1);*/
 // /*error_reporting(E_ALL);*/
 
+// Health status message
 $out = <<<'_GAN'
     They have taken the bridge and the second hall.
     We have barred the gates but cannot hold them for long.
@@ -39,6 +40,7 @@ if (! isset($uri[0])) {
 
 try {
     // Match the first element of the URI to the appropriate route
+    // Each route will have its own handler function that will be called with the HTTP verb and the URI as parameters
     switch ($uri[0]) {
         case 'info':
             sendData(['msg' => 'API']);
@@ -56,6 +58,7 @@ try {
             break;
     }
 } catch (Exception $e) {
+    // Exception handler
     error_log($e->getTraceAsString());
     sendError($e->getMessage(), 500);
 }
