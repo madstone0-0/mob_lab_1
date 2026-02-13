@@ -1,0 +1,16 @@
+{
+    "name": "mads/lab1",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Mads\\Lab1\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Madiba Hudson-Quansah",
+            "email": "mhquansah@gmail.com"
+        }
+    ],
+    "require": {}
+}
